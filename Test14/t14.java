@@ -16,6 +16,68 @@ class Solution {
 
 
 // 2: https://www.geeksforgeeks.org/radix-sort/
+/*package whatever //do not write package name here */
+
+import java.io.*;
+import java.util.*;
+
+class GFG {
+	public static void main (String[] args) {
+	    Scanner sc = new Scanner(System.in);
+	    int n=sc.nextInt();
+	    int[] arr=new int[n];
+	    for(int i=0;i<n;i++){
+	    arr[i]=sc.nextInt();
+	    }
+	    Solution s=new Solution();
+	    s.radix_sort(arr);
+	    System.out.println(Arrays.toString(arr));
+	}
+}
+class Solution{
+    public static void radix_sort(int[] arr){
+    int n=arr.length;
+        int max=Max(arr,n);
+        
+        for(int exp=1;max/exp>0;exp*=10){
+           
+            count_sort(arr,exp,n);
+        }
+        
+    }
+    
+    static void count_sort(int[] arr,int exp,int n){
+    int[] temp=new int[10];
+    
+    for(int i=0;i<n;i++){
+    temp[(arr[i]/exp)%10]++;
+    }
+    for(int i=1;i<10;i++){
+    temp[i]+=temp[i-1];
+    }
+    int[] ans=new int[n];
+    for(int i=n-1;i>=0;i--){
+    int pos=temp[(arr[i]/exp)%10]-1;
+    ans[pos]=arr[i];
+    temp[(arr[i]/exp)%10]--;
+
+    }
+    for(int i=0;i<n;i++){
+    arr[i]=ans[i];
+    }
+    
+    
+    
+    }
+    static int Max(int[] arr,int n){
+        int max=Integer.MIN_VALUE;
+        for(int i=0;i<n;i++){
+        max=Math.max(max,arr[i]);
+        }
+        return max;
+    }
+    
+}
 
 
 
