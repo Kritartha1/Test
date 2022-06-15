@@ -74,7 +74,92 @@ class Solution {
 
 // 3: https://leetcode.com/problems/evaluate-division/  
 
+//Union find: Best qsn of union find.
+class Solution {
+    HashMap<String,String> parent=new HashMap<>();
+    HashMap<String,Double> val=new HashMap<>();
+    
+    public double[] calcEquation(List<List<String>> equations, double[] values, List<List<String>> queries) {
+        
+        double[] ans=new double[queries.size()];
+        int i=0;
+        for(List<String> eqn:equations){
+            union(eqn.get(0),eqn.get(1),values[i++]);
+        }
+        i=0;
+        for(List<String> query:queries){
+            String a=query.get(0);
+            String b=query.get(1);
+            
+             if(parent.containsKey(a)&&parent.containsKey(b)&&(find(a)==find(b))){
+                ans[i++]=val.get(a)/val.get(b);
+                 
+                 //val.get(a)=a/parent(a)
+                 //val.get(b)=b/parent(b)
+                 
+                 //since parent(a)==parent(b)
+                 //So, a/b=val.get(a)/val.get(b)
+            }else{
+                
+                ans[i++]=-1;
+            }
+        }
+        return ans;
+    }
+    
+    public String find(String x){
+        String p=parent.get(x);
+        //if parent of x is not x,then do path compression and change values of x respectively...
+        if(x!=p){
+            String pp=find(p);
+            parent.put(x,pp);
+            val.put(x,val.get(x)*val.get(p));
+            
+        }
+        return parent.get(x);
+    }
+    
+   
+    public void add(String x){
+         //making sure every node has a parent..
+        //if new node is introduced,then it should be parent of itself..
+        //and itself to itself ratio=1.
 
+        if(parent.containsKey(x)){
+            return ;
+        }
+        parent.put(x,x);
+        val.put(x,1.0);
+    }
+    
+    public void union(String x,String y,double value){
+        add(x);add(y);
+        String from=find(x);
+        String to=find(y);
+        parent.put(from,to);
+        
+        //req=ratio b/w from=(parent of x) and to=(parent of y)
+        //x/from=val.get(from)
+        //y/to=val.get(to)
+        //So,from/to=(x/y)*val.get(y)/val.get(x)=value*val.get(y)/val.get(x)
+        
+        // 1-->2-->3-->4
+        //             |
+        //            \ /
+        //     7-->6-->5
+        //4=parent of 1,  5=parent of 7
+        
+        //for union (1,7)..=ratio(1/7)=ratio(1/4)*ratio(4/5)*ratio(5/7)
+        //ratio(1/4)=val.get(1)=val.get(x)
+        //ratio(5/7)=1/ratio(7/5)=1/val.get(7)=1/val.get(y)
+        //ratio(4,5)=req.
+        
+        //So, val.get(x)*req*(1/val.get(y))=ratio(1/7)=value
+        //req=ratio(4/5)=value*val.get(y)/val.get(x)
+        
+        val.put(from,value*val.get(y)/val.get(x));
+    }
+}
 
 
 
