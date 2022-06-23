@@ -65,7 +65,7 @@ class Solution {
         if(amount<coins[i]){
             return dp[i][amount]=Integer.MAX_VALUE;
         }
-        long ans=Math.min(1+helper(coins,i,amount-coins[i]), Math.min(1+helper(coins,i+1,amount-coins[i]),helper(coins,i+1,amount)));
+        long ans=Math.min(1+helper(coins,i,amount-coins[i]),helper(coins,i+1,amount));
         return dp[i][amount]=ans;
         
     }
